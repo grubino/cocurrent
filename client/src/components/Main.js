@@ -18,7 +18,7 @@ class AppComponent extends React.Component {
       return;
     }
     request
-      .post('http://localhost:8080/cocurrent/intersect')
+      .post('http://0a325ade.ngrok.io/cocurrent/intersect')
       .set('Accept', 'application/json')
       .attach('rows', files[0])
       .end((err, res) => {
@@ -31,8 +31,9 @@ class AppComponent extends React.Component {
   render() {
     return (
       <div className="index">
-        <Dropzone onDrop={this.onDrop.bind(this)}>
-          <p>Drop a file here, or click to find one</p>
+        <Dropzone className="index notice" onDrop={this.onDrop.bind(this)}>
+          <p>1) Drag & drop a file here or </p>
+          <p>2) Click here to find one</p>
         </Dropzone>
         <VennComponent data={this.state.flags} title="Cocurrences"/>
       </div>

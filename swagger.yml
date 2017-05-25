@@ -8,7 +8,7 @@ info:
     url: https://caraway.work
     email: greg@luzene.com
   version: '1'
-host: luzene.com:8888
+host: localhost:8080
 basePath: /cocurrent
 schemes:
   - https

@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import * as d3 from 'd3';
 import { VennDiagram } from 'venn.js';
-import product from 'cartesian-product';
+import Combinatorics from 'js-combinatorics';
 
 
 const VennComponent = createReactClass({
@@ -24,29 +24,35 @@ const VennComponent = createReactClass({
       chart: 'No Data Loaded'
     };
   },
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.data.length !== this.props.data.length) {
+      return true;
+    }
+    return false;
+  },
+
   render() {
+
     if (!this.props.data.length) return (
-      <div className="index">
+      <div className='index'>
         <p>Drop a CSV file in the box above</p>
       </div>
     );
 
-    let data = this.props.data.concat(
-      product([this.props.data, this.props.data])
-        .filter(x => x[0].label != x[1].label)
-        .map(x => {
-          return {
-            label: `${x[0].label}&${x[1].label}`,
-            members: x[0].members.filter(m => x[1].members.indexOf(m) !== -1)
-          };
-        })
-        .filter(x => x.members.length > 0));
+    let powerSet = Combinatorics.power(this.props.data).toArray();
+    let data = powerSet
+      .map(x => {
+        let memberSets = x.map(a => new Set(a.members));
+        let memberSet = memberSets
+          .reduce((acc, a) => new Set([...acc].filter(b => a.has(b))), x.length ? new Set(memberSets[0]) : new Set());
+        return {
+          label: x.map(a => a.label).join('&'),
+          members: [...memberSet]
+        };
+      }).filter(x => x.members.length > 0);
+    let totalPopulation = data.reduce((acc, x) => acc + x.members.length, 0);
 
-    if (this.connectedFauxDOM['chart']) {
-      delete this.connectedFauxDOM['chart'];
-    }
-    let faux = this.connectFauxDOM('div', 'chart');
-    let vd = VennDiagram();
     let presentedData = data.map(datum => {
       return {
         sets: datum.label.split('&'),
@@ -54,7 +60,29 @@ const VennComponent = createReactClass({
       };
     });
 
-    d3.select(faux).datum(presentedData).call(vd);
+    if (this.connectedFauxDOM['chart']) delete this.connectedFauxDOM['chart'];
+
+    let faux = this.connectFauxDOM('div', 'chart');
+    let chart = VennDiagram()
+      .width(640)
+      .height(640);
+    let div = d3.select(faux).datum(presentedData),
+      layout = chart(div),
+      textCentres = layout.textCentres;
+
+    let genText = function(d) { return `${d.sets.join(' & ')}: ${100 * (d.size.toFixed(2) / totalPopulation).toFixed(2)} %`; };
+    layout.enter
+      .append('text')
+      .attr('class', 'sublabel')
+      .text(genText)
+      .style('fill', '#BBB')
+      .style('font-size', '10px')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '18')
+      .attr('x', function(d) { return textCentres[d.sets].x; })
+      .attr('y', function(d) { return textCentres[d.sets].y; });
+
+    div.call(chart);
 
     return (
       <div>
@@ -62,6 +90,7 @@ const VennComponent = createReactClass({
       </div>
     );
   }
+
 });
 
 export default VennComponent;

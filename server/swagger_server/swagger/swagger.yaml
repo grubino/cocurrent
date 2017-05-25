@@ -9,7 +9,7 @@ info:
     name: "Caraway Support"
     url: "https://caraway.work"
     email: "greg@luzene.com"
-host: "luzene.com:8888"
+host: "localhost:8080"
 basePath: "/cocurrent"
 schemes:
 - "https"
