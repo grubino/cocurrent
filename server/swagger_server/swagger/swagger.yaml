@@ -1,0 +1,71 @@
+---
+swagger: "2.0"
+info:
+  description: "illustrate the intersection of properties of database objects"
+  version: "1"
+  title: "cocurrent"
+  termsOfService: "only registered users are allowed to use this api"
+  contact:
+    name: "Caraway Support"
+    url: "https://caraway.work"
+    email: "greg@luzene.com"
+host: "luzene.com:8888"
+basePath: "/cocurrent"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /intersect:
+    get:
+      description: "return sets and their labels"
+      operationId: "intersect_get"
+      parameters: []
+      responses:
+        200:
+          description: "list of sets and labels"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FlagSet"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+    post:
+      description: "upload csv file and aggregate into sets"
+      operationId: "intersect_post"
+      consumes:
+      - "multipart/form-data"
+      parameters:
+      - name: "rows"
+        in: "formData"
+        description: "records to intersect"
+        required: true
+        type: "file"
+      responses:
+        201:
+          description: "create sets and labels"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FlagSet"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+definitions:
+  FlagSet:
+    type: "object"
+    properties:
+      label:
+        type: "string"
+      members:
+        type: "array"
+        items:
+          type: "integer"
+  Flag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      value:
+        type: "boolean"
