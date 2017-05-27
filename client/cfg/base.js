@@ -25,7 +25,17 @@ module.exports = {
     hot: true,
     port: defaultSettings.port,
     publicPath: defaultSettings.publicPath,
-    noInfo: false
+    noInfo: false,
+    setup: function(app) {
+      let basicAuth = require('express-basic-auth');
+      app.use(basicAuth({
+        users: {
+          'walter.kawecki@voterlabs.com': 'banana'
+        },
+        challenge: true,
+        realm: 'VoterLabs'
+      }));
+    }
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

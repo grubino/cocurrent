@@ -2,9 +2,11 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
+import FlagSetTable from './FlagSetTable';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import VennComponent from './VennComponent';
+
 
 class AppComponent extends React.Component {
   constructor(props) {
@@ -30,12 +32,13 @@ class AppComponent extends React.Component {
   }
   render() {
     return (
-      <div className="index">
-        <Dropzone className="index notice" onDrop={this.onDrop.bind(this)}>
+      <div className='index'>
+        <Dropzone className='index notice' onDrop={this.onDrop.bind(this)}>
           <p>1) Drag & drop a file here or </p>
           <p>2) Click here to find one</p>
         </Dropzone>
-        <VennComponent data={this.state.flags} title="Cocurrences"/>
+        <VennComponent data={this.state.flags} title='Cocurrences'/>
+        <FlagSetTable data={this.state.flags}/>
       </div>
     );
   }

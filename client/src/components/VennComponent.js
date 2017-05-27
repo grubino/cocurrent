@@ -25,7 +25,7 @@ const VennComponent = createReactClass({
     };
   },
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     if(nextProps.data.length !== this.props.data.length) {
       return true;
     }
@@ -70,7 +70,9 @@ const VennComponent = createReactClass({
       layout = chart(div),
       textCentres = layout.textCentres;
 
-    let genText = function(d) { return `${d.sets.join(' & ')}: ${100 * (d.size.toFixed(2) / totalPopulation).toFixed(2)} %`; };
+    let genText = function(d) {
+      return `${d.sets.join(' & ')}: ${(Math.PI * (d.size.toFixed(2) / totalPopulation)).toFixed(2)}`;
+    };
     layout.enter
       .append('text')
       .attr('class', 'sublabel')
