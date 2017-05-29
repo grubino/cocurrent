@@ -24,6 +24,9 @@ const VennComponent = createReactClass({
       height: '0'
     };
   },
+  shouldComponentUpdate(nextProps) {
+    return JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data);
+  },
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions.bind(this));
