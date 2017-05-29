@@ -11,9 +11,17 @@ from swagger_server.models.flag_set_dto import FlagSetDTO
 DATA = []
 
 
-def _only_bools(i, row):
+def _check_label_set(k, label_set):
+    if label_set is not None:
+        return k in label_set
+    else:
+        return True
+
+
+def _only_bools(i, row, label_set=None):
     bools_only = dict((k, v.lower() in {'true', 't', 'y'})
-                      for k, v in row.items() if v.lower() in {'true', 'false', 't', 'f', 'y', 'n'})
+                      for k, v in row.items()
+                      if _check_label_set(k, label_set) and v.lower() in {'true', 'false', 't', 'f', 'y', 'n'})
     bools_only['id'] = row.get('id', i)
     return bools_only
 
@@ -28,6 +36,7 @@ def _add_label(acc, x):
     return acc
 
 
+# TODO - remove FlagSet... it's an artifact of a previous version
 def _gen_rows(flags: List[FlagSet], n=2):
     def _combine_rows(acc: FlagSet, x: FlagSet):
         l = ' & '.join([acc.label, x.label])
@@ -53,3 +62,12 @@ def set_data(rows):
 
 def get_data():
     return DATA
+
+
+def get_venn_data(rows, labels):
+    global DATA
+    label_set = set(labels)
+    return [x for x in _gen_rows([FlagSet(k, v)
+                                  for k, v in reduce(_add_label, (_only_bools(i, row, label_set)
+                                                                  for i, row in enumerate(csv.DictReader(rows))),
+                                                     {}).items()], len(label_set)) if x.size > 0]

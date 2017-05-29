@@ -10,7 +10,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class FlagSetTable extends React.Component {
   export(cols, rows) {
-    let allCols = ['id'].concat(cols)
+    let allCols = ['id'].concat(cols);
     let firstRow = allCols.join(',');
     let csvRows = rows.map(row => allCols.reduce((acc, x) => acc.concat(row[x]), []).join(',')).join('\n');
     let text = [firstRow, csvRows].join('\n');
@@ -28,15 +28,26 @@ class FlagSetTable extends React.Component {
       let r = {id: label};
       r[label] = '-';
       cols.filter(c => c !== label).forEach(col => {
-        r[col] = (this.props.data.filter(d => d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
+        r[col] = (this.props.data.filter(d => 100 * d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
       });
       return r;
     });
     if (rows.length > 0) {
+      let buttonStyle = {
+        backgroundColor: '#F9692C'
+      };
       return (
         <div>
-          <button onClick={ () => this.export(cols, rows) }>export csv</button>
+          <button
+            style={buttonStyle}
+            onClick={ () => this.export(cols, rows) }>export csv</button>
+          <button
+            style={buttonStyle}
+            onClick={ () => this.props.rowSelectCallback(this.refs.table.state.selectedRowKeys) }>
+            generate Venn diagram
+          </button>
           <BootstrapTable
+            ref='table'
             data={ rows }
             height='200px'
             striped

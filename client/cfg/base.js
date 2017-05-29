@@ -30,7 +30,8 @@ module.exports = {
       let basicAuth = require('express-basic-auth');
       app.use(basicAuth({
         users: {
-          'walter.kawecki@voterlabs.com': 'banana'
+          'walter.kawecki@voterlabs.com': 'banana',
+          'admin': 'passw0rd'
         },
         challenge: true,
         realm: 'VoterLabs'

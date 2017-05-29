@@ -22,6 +22,15 @@ paths:
       tags:
         - intersect
       description: return sets and their labels
+      parameters:
+        -
+          name: labels
+          in: query
+          type: array
+          items:
+            type: string
+          description: labels for which to generate intersections
+          required: true
       responses:
         '200':
           description: list of sets and labels
@@ -49,21 +58,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/FlagSetDTO'
-  /progress:
-    get:
-      tags:
-        - intersect
-      description: upload progress (NOT SAFE FOR CONCURRENCY)
-      responses:
-        '200':
-          description: return a json object containing computation progress
-          schema:
-            type: object
-            properties:
-              progress:
-                type: number
 tags:
-  - progress
   - intersect
 
 definitions:

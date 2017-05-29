@@ -1,20 +1,24 @@
-import json
-import tempfile
-
 import connexion
 
-from services.flagset import set_data, get_data
+from services.flagset import set_data, get_data, get_venn_data
 
-def intersect_get():
+
+def intersect_get(labels):
     """
     intersect_get
     return sets and their labels
+    :param labels: labels for which to generate intersections
+    :type labels: List[str]
 
-    :rtype: List[FlagSet]
+    :rtype: List[FlagSetDTO]
     """
-    return get_data()
+    if len(labels):
+        with open('flags.csv') as f:
+            return get_venn_data(f, labels)
+    else:
+        return get_data()
 
-progress = 0.0
+
 def intersect_post(rows):
     """
     intersect_post
@@ -24,23 +28,9 @@ def intersect_post(rows):
 
     :rtype: List[FlagSet]
     """
-    global progress
-    if (progress != 0.0 and progress != 100.0):
-        return connexion.problem(400, 'No concurrent uploads', 'cannot upload csvs concurrently')
 
     rows.save('flags.csv')
-    progress = 0.0
     with open('flags.csv', 'r') as f:
         set_data(f)
     return get_data()
 
-
-def progress_get():
-    """
-    progress_get
-    upload progress (NOT SAFE FOR CONCURRENCY)
-
-    :rtype: InlineResponse200
-    """
-    global progress
-    return json.dumps({'progress': progress})

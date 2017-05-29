@@ -25,7 +25,14 @@ paths:
       - "intersect"
       description: "return sets and their labels"
       operationId: "intersect_get"
-      parameters: []
+      parameters:
+      - name: "labels"
+        in: "query"
+        description: "labels for which to generate intersections"
+        required: true
+        type: "array"
+        items:
+          type: "string"
       responses:
         200:
           description: "list of sets and labels"
@@ -55,19 +62,6 @@ paths:
             items:
               $ref: "#/definitions/FlagSetDTO"
       x-swagger-router-controller: "swagger_server.controllers.intersect_controller"
-  /progress:
-    get:
-      tags:
-      - "intersect"
-      description: "upload progress (NOT SAFE FOR CONCURRENCY)"
-      operationId: "progress_get"
-      parameters: []
-      responses:
-        200:
-          description: "return a json object containing computation progress"
-          schema:
-            $ref: "#/definitions/inline_response_200"
-      x-swagger-router-controller: "swagger_server.controllers.intersect_controller"
 definitions:
   FlagSetDTO:
     type: "object"
@@ -96,7 +90,3 @@ definitions:
         type: "string"
       value:
         type: "boolean"
-  inline_response_200:
-    properties:
-      progress:
-        type: "number"

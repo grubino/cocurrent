@@ -20,64 +20,101 @@ const VennComponent = createReactClass({
   },
   getInitialState() {
     return {
-      chart: 'No Data Loaded'
+      width: '0',
+      height: '0'
     };
   },
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions.bind(this));
+  },
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions.bind(this));
+  },
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  },
 
-  shouldComponentUpdate(nextProps) {
-    if(nextProps.data.length !== this.props.data.length) {
-      return true;
-    }
-    return false;
+  export(canvas) {
+    let url = canvas.toDataURL('image/png');
+    let tempLink = document.createElement('a');
+    tempLink.href = url;
+    tempLink.setAttribute('download', 'export.png');
+    tempLink.click();
   },
 
   render() {
 
     if (!this.props.data.length) return (
-      <div className='index'>
-        <p>Drop a CSV file in the box above</p>
-      </div>
+      <div><p>Drop a CSV file in the box above</p></div>
     );
-    let data = this.props.data;
-    let totalPopulation = data
-      .filter(x => x.label.indexOf('&') === -1)
-      .reduce((acc, x) => acc + x.size, 0);
-
-    let presentedData = data.map(datum => {
+    let data = this.props.data.map(p =>
+    {
       return {
-        sets: datum.label.split(' & '),
-        size: datum.size
-      };
+        sets: p.labels,
+        size: p.size
+      }
     });
+    let totalPopulation = data
+      .filter(x => x.sets.length === 1)
+      .reduce((acc, x) => acc + x.size, 0);
 
     if (this.connectedFauxDOM['chart']) delete this.connectedFauxDOM['chart'];
 
     let faux = this.connectFauxDOM('div', 'chart');
     let chart = VennDiagram()
-      .width(640)
-      .height(640);
-    let div = d3.select(faux).datum(presentedData),
+      .width(parseInt(this.state.width))
+      .height(parseInt(this.state.height));
+    let div = d3.select(faux).datum(data),
       layout = chart(div),
       textCentres = layout.textCentres;
 
     let genText = function(d) {
-      return `${d.sets.join(' & ')}: ${(Math.PI * (d.size.toFixed(2) / totalPopulation)).toFixed(2)}`;
+      return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
     layout.enter
       .append('text')
       .attr('class', 'sublabel')
       .text(genText)
-      .style('fill', '#BBB')
+      .style('fill', '#333')
       .style('font-size', '10px')
       .attr('text-anchor', 'middle')
       .attr('dy', '18')
       .attr('x', function(d) { return textCentres[d.sets].x; })
       .attr('y', function(d) { return textCentres[d.sets].y; });
-
     div.call(chart);
 
+    let buttonStyle = {
+      backgroundColor: '#F9692C'
+    };
     return (
       <div>
+        <button
+          onClick={() => {
+
+            let canvas = document.createElement('canvas');
+            canvas.width = parseInt(this.state.width);
+            canvas.height = parseInt(this.state.height);
+
+            let ctx = canvas.getContext('2d');
+            let svgXML = (new XMLSerializer()).serializeToString(document.getElementsByTagName('svg')[0]);
+            let DOMURL = window.URL || window.webkitURL || window;
+
+            let image = new Image();
+            let svgBlob = new Blob([svgXML], {type: 'image/svg+xml;charset=utf-8'});
+            let url = DOMURL.createObjectURL(svgBlob);
+
+            image.onload = () => {
+              if (image.complete) {
+                ctx.drawImage(image, 0, 0);
+                DOMURL.revokeObjectURL(url);
+                this.export(canvas);
+              }
+            };
+            image.src = url;
+
+          } }
+          style={buttonStyle}>download</button>
         {faux.toReact()}
       </div>
     );

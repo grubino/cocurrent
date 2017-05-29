@@ -9,17 +9,34 @@ import VennComponent from './VennComponent';
 import request from 'superagent';
 import config from 'config';
 import MDSpinner from 'react-md-spinner';
+import NotificationSystem from 'react-notification-system';
 
 class AppComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       flags: [],
+      vennFlags: [],
       columns: [],
       total: 0,
       downloading: false
     };
     this.dropzone = null;
+    this.notificationSystem = null;
+  }
+  componentDidMount() {
+    this.notificationSystem = this.refs.notificationSystem;
+  }
+  _handleErr(err) {
+    this.setState({
+      downloading: false
+    });
+    this.notificationSystem.addNotification({
+      title: 'Error',
+      level: 'error',
+      position: 'tc',
+      message: `${err.message}`
+    });
   }
   onDrop(file) {
     this.dropzone.removeAllFiles();
@@ -28,8 +45,10 @@ class AppComponent extends React.Component {
       .post(`http://${config.apiHost}:${config.apiPort}/cocurrent/intersect`)
       .set('Accept', 'application/json')
       .attach('rows', file)
-      .end((err, res) => {
-        if (err) throw err;
+      .end((err, res) =>
+      {
+        if (err) this._handleErr(err);
+
         let singles = res.body.filter(x => x.labels.length === 1);
         let total = singles.reduce((acc, x) => acc + x.size, 0);
         this.setState({
@@ -40,16 +59,29 @@ class AppComponent extends React.Component {
         });
       });
   }
-  onRowSelect(rows) {
-    rows;
+  onRowSelect(rowKeys) {
+    this.setState({downloading: true});
+    request
+      .get(`http://${config.apiHost}:${config.apiPort}/cocurrent/intersect?labels=${rowKeys.join(',')}`)
+      .set('Accept', 'application/json')
+      .end((err, res) =>
+      {
+        if (err) this._handleErr(err);
+        this.setState({
+          vennFlags: res.body,
+          downloading: false
+        });
+      });
   }
   render() {
     let flags = this.state.flags;
+    let vennFlags = this.state.vennFlags;
     let columns = this.state.columns;
     let total = this.state.total;
 
     return (
       <div>
+        <NotificationSystem ref="notificationSystem"/>
         <DropzoneComponent
           config={
             {
@@ -88,7 +120,7 @@ class AppComponent extends React.Component {
             }
           })(this.state.downloading)
         }
-        <VennComponent data={[]} title='Cocurrences'/>
+        <VennComponent data={vennFlags} title='Cocurrences'/>
       </div>
     );
   }
