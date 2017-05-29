@@ -30,13 +30,12 @@ def _add_label(acc, x):
     for k in [key for key in x.keys() if key != 'id']:
         if x[k]:
             if k in acc:
-                acc[k] = list(set([x['id']] + acc[k]))
+                acc[k] = list(set(acc[k] + [x['id']]))
             else:
                 acc[k] = [x['id']]
     return acc
 
 
-# TODO - remove FlagSet... it's an artifact of a previous version
 def _gen_rows(flags: List[FlagSet], n=2):
     def _combine_rows(acc: FlagSet, x: FlagSet):
         l = ' & '.join([acc.label, x.label])
@@ -57,7 +56,7 @@ def set_data(rows):
     DATA = [x for x in _gen_rows([FlagSet(k, v)
                                   for k, v in reduce(_add_label, (_only_bools(i, row)
                                                                   for i, row in enumerate(csv.DictReader(rows))),
-                                                     {}).items()]) if x.size > 0]
+                                                     {}).items()])]
 
 
 def get_data():
@@ -70,4 +69,4 @@ def get_venn_data(rows, labels):
     return [x for x in _gen_rows([FlagSet(k, v)
                                   for k, v in reduce(_add_label, (_only_bools(i, row, label_set)
                                                                   for i, row in enumerate(csv.DictReader(rows))),
-                                                     {}).items()], len(label_set)) if x.size > 0]
+                                                     {}).items()], len(label_set))]

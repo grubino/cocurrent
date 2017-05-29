@@ -28,7 +28,7 @@ class FlagSetTable extends React.Component {
       let r = {id: label};
       r[label] = '-';
       cols.filter(c => c !== label).forEach(col => {
-        r[col] = (this.props.data.filter(d => 100 * d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
+        r[col] = (100 * this.props.data.filter(d => d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
       });
       return r;
     });
