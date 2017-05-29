@@ -4,7 +4,7 @@ import baseConfig from './base';
 
 let config = {
   appEnv: 'dist',  // feel free to remove the appEnv property here
-  apiHost: 'localhost',
+  apiHost: 'ec2-54-236-62-211.compute-1.amazonaws.com',
   apiPort: 8080
 };
 
