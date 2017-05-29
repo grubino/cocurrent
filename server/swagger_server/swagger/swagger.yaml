@@ -11,6 +11,7 @@ info:
     email: "greg@luzene.com"
 host: "localhost:8080"
 basePath: "/cocurrent"
+tags: []
 schemes:
 - "https"
 consumes:
@@ -20,6 +21,8 @@ produces:
 paths:
   /intersect:
     get:
+      tags:
+      - "intersect"
       description: "return sets and their labels"
       operationId: "intersect_get"
       parameters: []
@@ -29,9 +32,11 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/FlagSet"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+              $ref: "#/definitions/FlagSetDTO"
+      x-swagger-router-controller: "swagger_server.controllers.intersect_controller"
     post:
+      tags:
+      - "intersect"
       description: "upload csv file and aggregate into sets"
       operationId: "intersect_post"
       consumes:
@@ -48,9 +53,31 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/FlagSet"
-      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+              $ref: "#/definitions/FlagSetDTO"
+      x-swagger-router-controller: "swagger_server.controllers.intersect_controller"
+  /progress:
+    get:
+      tags:
+      - "intersect"
+      description: "upload progress (NOT SAFE FOR CONCURRENCY)"
+      operationId: "progress_get"
+      parameters: []
+      responses:
+        200:
+          description: "return a json object containing computation progress"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "swagger_server.controllers.intersect_controller"
 definitions:
+  FlagSetDTO:
+    type: "object"
+    properties:
+      labels:
+        type: "array"
+        items:
+          type: "string"
+      size:
+        type: "integer"
   FlagSet:
     type: "object"
     properties:
@@ -69,3 +96,7 @@ definitions:
         type: "string"
       value:
         type: "boolean"
+  inline_response_200:
+    properties:
+      progress:
+        type: "number"

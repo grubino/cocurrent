@@ -19,6 +19,8 @@ produces:
 paths:
   /intersect:
     get:
+      tags:
+        - intersect
       description: return sets and their labels
       responses:
         '200':
@@ -26,8 +28,10 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/FlagSet'
+              $ref: '#/definitions/FlagSetDTO'
     post:
+      tags:
+        - intersect
       description: upload csv file and aggregate into sets
       consumes:
         - multipart/form-data
@@ -44,8 +48,34 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/FlagSet'
+              $ref: '#/definitions/FlagSetDTO'
+  /progress:
+    get:
+      tags:
+        - intersect
+      description: upload progress (NOT SAFE FOR CONCURRENCY)
+      responses:
+        '200':
+          description: return a json object containing computation progress
+          schema:
+            type: object
+            properties:
+              progress:
+                type: number
+tags:
+  - progress
+  - intersect
+
 definitions:
+  FlagSetDTO:
+    type: object
+    properties:
+      labels:
+        type: array
+        items:
+          type: string
+      size:
+        type: integer
   FlagSet:
     type: object
     properties:

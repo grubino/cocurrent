@@ -1,0 +1,59 @@
+.react-bs-table-container {
+  margin: 5px 10px;
+}
+
+.tr-string{
+  font-style: oblique;
+  color: red;
+  background-color: #666;
+}
+
+.tr-function-example{
+  font-weight: bold;
+  background-color: aquamarine;
+}
+
+.td-header-string {
+  font-style: oblique;
+  color: #fff;
+  background-color: #666;
+  padding: 10px;
+}
+
+.td-column-string {
+  color: #fff;
+  background-color: #666;
+}
+
+.td-column-function-odd-example{
+  color: blue;
+  background-color: antiquewhite;
+}
+
+.td-column-function-even-example{
+  color: red;
+  background-color: yellowgreen;
+}
+
+.my-header-class {
+  color: #000;
+  background-color: #0066FF;
+}
+
+.my-body-class {
+  color: #fff;
+  background-color: #666;
+}
+
+.my-container-class {
+  border: #666 5px solid;
+}
+
+.my-table-container-class {
+  table-layout: fixed;
+  border: #666 5px solid;
+}
+
+.class-for-editing-cell {
+  background-color: #666;
+}

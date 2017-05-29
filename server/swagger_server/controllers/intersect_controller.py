@@ -1,14 +1,9 @@
+import json
 import tempfile
 
 import connexion
 
 from services.flagset import set_data, get_data
-from swagger_server.models.flag_set import FlagSet
-from datetime import date, datetime
-from typing import List, Dict
-from six import iteritems
-from ..util import deserialize_date, deserialize_datetime
-import csv
 
 def intersect_get():
     """
@@ -19,7 +14,7 @@ def intersect_get():
     """
     return get_data()
 
-
+progress = 0.0
 def intersect_post(rows):
     """
     intersect_post
@@ -29,8 +24,23 @@ def intersect_post(rows):
 
     :rtype: List[FlagSet]
     """
+    global progress
+    if (progress != 0.0 and progress != 100.0):
+        return connexion.problem(400, 'No concurrent uploads', 'cannot upload csvs concurrently')
 
     rows.save('flags.csv')
+    progress = 0.0
     with open('flags.csv', 'r') as f:
         set_data(f)
     return get_data()
+
+
+def progress_get():
+    """
+    progress_get
+    upload progress (NOT SAFE FOR CONCURRENCY)
+
+    :rtype: InlineResponse200
+    """
+    global progress
+    return json.dumps({'progress': progress})

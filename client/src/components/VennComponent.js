@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import * as d3 from 'd3';
 import { VennDiagram } from 'venn.js';
-import Combinatorics from 'js-combinatorics';
 
 
 const VennComponent = createReactClass({
@@ -39,24 +38,15 @@ const VennComponent = createReactClass({
         <p>Drop a CSV file in the box above</p>
       </div>
     );
-
-    let powerSet = Combinatorics.power(this.props.data).toArray();
-    let data = powerSet
-      .map(x => {
-        let memberSets = x.map(a => new Set(a.members));
-        let memberSet = memberSets
-          .reduce((acc, a) => new Set([...acc].filter(b => a.has(b))), x.length ? new Set(memberSets[0]) : new Set());
-        return {
-          label: x.map(a => a.label).join('&'),
-          members: [...memberSet]
-        };
-      }).filter(x => x.members.length > 0);
-    let totalPopulation = data.reduce((acc, x) => acc + x.members.length, 0);
+    let data = this.props.data;
+    let totalPopulation = data
+      .filter(x => x.label.indexOf('&') === -1)
+      .reduce((acc, x) => acc + x.size, 0);
 
     let presentedData = data.map(datum => {
       return {
-        sets: datum.label.split('&'),
-        size: datum.members.length
+        sets: datum.label.split(' & '),
+        size: datum.size
       };
     });
 

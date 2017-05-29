@@ -1,28 +1,53 @@
 /**
  * Created by gregrubino on 5/25/17.
  */
-require('react-bootstrap-table/css/react-bootstrap-table.css');
+
+import 'styles/table.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class FlagSetTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data.map(d => {
-        return {
-          label: d.label,
-          size: d.members.length
-        }
-      })
-    };
-  }
   render() {
+    let total = this.props.total;
+    let cols = this.props.columns;
+    let rows = this.props.columns.map(label => {
+      let r = {id: label};
+      r[label] = '-';
+      cols.filter(c => c !== label).forEach(col => {
+        r[col] = (this.props.data.filter(d => d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
+      });
+      return r;
+    });
     return (
-      <BootstrapTable data={ this.props.data } options={ { noDataText: 'Please upload a CSV' } }>
-        <TableHeaderColumn width={100} dataField="label" isKey={true}>Flag Field</TableHeaderColumn>
-        <TableHeaderColumn width={100} dataField="size">Set Size</TableHeaderColumn>
+      <BootstrapTable
+        data={ rows }
+        height='200px'
+        striped
+        hover
+        condensed
+        scrollTop={ 'Bottom' }
+        selectRow={
+          {
+            mode: 'checkbox',
+            clickToSelect: true
+          }
+        }>
+        <TableHeaderColumn
+          dataField='id'
+          width='200px'
+          isKey={true}>ID</TableHeaderColumn>
+        {
+          cols.map(col => {
+            return (
+              <TableHeaderColumn
+                key={col}
+                width='200px'
+                dataField={`${col}`}>{col}</TableHeaderColumn>
+            );
+          })
+        }
       </BootstrapTable>
     );
   }
