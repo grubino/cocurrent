@@ -2,7 +2,7 @@
 
 import connexion
 from .encoder import JSONEncoder
-from flask.ext.cors import CORS
+from flask_cors import CORS
 import os
 
 if __name__ == '__main__':
