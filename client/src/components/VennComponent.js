@@ -49,7 +49,7 @@ const VennComponent = createReactClass({
   render() {
 
     if (!this.props.data.length) return (
-      <div><p>Drop a CSV file in the box above</p></div>
+      <div></div>
     );
     let data = this.props.data.map(p =>
     {

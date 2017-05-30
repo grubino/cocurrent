@@ -84,7 +84,7 @@ class FlagSetTable extends React.Component {
       );
     } else {
       return (
-        <p style={ {justifyContent: 'center'} }>There is no data to show</p>
+        <p style={ {textAlign: 'center'} }>There is no data to show</p>
       );
     }
   }
