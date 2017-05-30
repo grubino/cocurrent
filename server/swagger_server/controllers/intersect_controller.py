@@ -2,7 +2,6 @@ import connexion
 
 from services.flagset import set_data, get_data, get_venn_data
 
-
 def intersect_get(labels):
     """
     intersect_get

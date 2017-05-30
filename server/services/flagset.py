@@ -4,7 +4,8 @@ import itertools
 from typing import List
 
 from swagger_server.models.flag_set import FlagSet
-import csv
+import pandas as pd
+import numpy as np
 
 from swagger_server.models.flag_set_dto import FlagSetDTO
 
@@ -21,18 +22,15 @@ def _check_label_set(k, label_set):
 def _only_bools(i, row, label_set=None):
     bools_only = dict((k, v.lower() in {'true', 't', 'y'})
                       for k, v in row.items()
-                      if _check_label_set(k, label_set) and v.lower() in {'true', 'false', 't', 'f', 'y', 'n'})
+                      if _check_label_set(k, label_set) and v.lower() in {'true', 'false', 't', 'f', 'y', 'n', ''})
     bools_only['id'] = row.get('id', i)
     return bools_only
 
 
-def _add_label(acc, x):
-    for k in [key for key in x.keys() if key != 'id']:
-        if x[k]:
-            if k in acc:
-                acc[k] = list(set(acc[k] + [x['id']]))
-            else:
-                acc[k] = [x['id']]
+def _aggregate_label(acc, x):
+    _id, label, val = x
+    if val:
+        acc[label] = (acc.get(label, []) + [_id])
     return acc
 
 
@@ -51,12 +49,24 @@ def _gen_rows(flags: List[FlagSet], n=2):
                 yield FlagSetDTO(c[0].label.split(' & '), len(c[0].members))
 
 
+def get_dataframe(rows) -> pd.DataFrame:
+    df = pd.read_csv(rows)
+    df.replace(to_replace=['[Tt](rue)?', '[Ff](alse)?', '[Yy]', '[Nn]', np.nan],
+               value=[True, False, True, False, False],
+               inplace=True,
+               regex=True)
+    bool_cols = [x for x, y in df.dtypes.iteritems() if y == 'bool']
+    only_bool_df = df[bool_cols]
+    only_bool_df['id'] = pd.Series(range(len(only_bool_df)))
+    return only_bool_df
+
+
 def set_data(rows):
     global DATA
+    df = get_dataframe(rows)
     DATA = [x for x in _gen_rows([FlagSet(k, v)
-                                  for k, v in reduce(_add_label, (_only_bools(i, row)
-                                                                  for i, row in enumerate(csv.DictReader(rows))),
-                                                     {}).items()])]
+                                  for k, v in zip(df.columns.values, [df[df[col] == True]['id']
+                                                                      for col in df.columns.values if col != 'id'])])]
 
 
 def get_data():
@@ -65,8 +75,8 @@ def get_data():
 
 def get_venn_data(rows, labels):
     global DATA
-    label_set = set(labels)
+    label_set = list(set(labels))
+    df = get_dataframe(rows)[label_set+['id']]
     return [x for x in _gen_rows([FlagSet(k, v)
-                                  for k, v in reduce(_add_label, (_only_bools(i, row, label_set)
-                                                                  for i, row in enumerate(csv.DictReader(rows))),
-                                                     {}).items()], len(label_set))]
+                                  for k, v in zip(df.columns.values, [df[df[col]]['id'].values
+                                                                      for col in df.columns.values if col != 'id'])])]
