@@ -1,2 +1,3 @@
 FROM nginx
-COPY ./nginx/* /etc/nginx/
+COPY ./nginx/conf.d/default.conf /etc/nginx/conf.d/
+COPY ./nginx/.htpasswd /etc/nginx/
