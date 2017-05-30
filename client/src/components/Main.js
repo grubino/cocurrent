@@ -1,6 +1,7 @@
 require('react-dropzone-component/styles/filepicker.css');
 require('dropzone/dist/dropzone.css');
 require('react-dropzone-component/dist/react-dropzone.min.js');
+require('../images/logo.png');
 
 import React from 'react';
 import FlagSetTable from './FlagSetTable';
