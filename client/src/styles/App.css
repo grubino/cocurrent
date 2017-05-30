@@ -3,6 +3,9 @@ body {
   color: #fff;
   background: #222;
 }
+.logo {
+  background-color: #aaa;
+}
 
 .index {
   margin: 40px auto;
@@ -24,6 +27,6 @@ body {
 }
 
 .filepicker {
-  color: #666;
+
 }
 

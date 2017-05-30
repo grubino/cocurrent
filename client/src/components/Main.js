@@ -82,6 +82,16 @@ class AppComponent extends React.Component {
     return (
       <div>
         <NotificationSystem ref="notificationSystem"/>
+        <img style={
+          {
+            background: '#ddd',
+            position: 'fixed',
+            left: '0px',
+            top: '0px',
+            width: '200px',
+            border: '1px solid black'
+          }
+        } class="logo" src="/images/logo.png"/>
         <DropzoneComponent
           config={
             {
