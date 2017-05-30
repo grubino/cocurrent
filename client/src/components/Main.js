@@ -52,7 +52,7 @@ class AppComponent extends React.Component {
         let singles = res.body.filter(x => x.labels.length === 1);
         let total = singles.reduce((acc, x) => acc + x.size, 0);
         this.setState({
-          flags: res.body.filter(x => x.labels.length === 2),
+          flags: res.body,
           columns: singles.map(x => x.labels[0]),
           total: total,
           downloading: false

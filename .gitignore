@@ -163,3 +163,4 @@ typings/
 .idea
 *.jar
 *.csv
+.DS_Store

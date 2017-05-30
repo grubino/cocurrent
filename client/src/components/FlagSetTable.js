@@ -24,11 +24,16 @@ class FlagSetTable extends React.Component {
   render() {
     let total = this.props.total;
     let cols = this.props.columns;
+    let data = this.props.data;
+    let singles = data.filter(p => p.labels.length === 1);
+    let intersects = data.filter(p => p.labels.length === 2);
     let rows = this.props.columns.map(label => {
       let r = {id: label};
-      r[label] = '-';
+      r[label] = (100 * singles.filter(p => p.labels[0] === label)[0].size / total).toFixed(2);
       cols.filter(c => c !== label).forEach(col => {
-        r[col] = (100 * this.props.data.filter(d => d.labels.indexOf(label) !== -1)[0].size / total).toFixed(2);
+        let labelColIntersect = intersects.filter(d => (
+          d.labels.indexOf(label) !== -1 && d.labels.indexOf(col) !== -1));
+        r[col] = (100 * labelColIntersect[0].size / total).toFixed(2);
       });
       return r;
     });

@@ -40,7 +40,7 @@ def _gen_rows(flags: List[FlagSet], n=2):
         membs = list(set(acc.members) & set(x.members))
         return FlagSet(l, membs)
 
-    for i in range(1, n+1):
+    for i in range(1, n + 1):
         for c in itertools.combinations(flags, i):
             if len(c) > 1:
                 flag_set = reduce(_combine_rows, c[1:], c[0])
@@ -76,7 +76,7 @@ def get_data():
 def get_venn_data(rows, labels):
     global DATA
     label_set = list(set(labels))
-    df = get_dataframe(rows)[label_set+['id']]
+    df = get_dataframe(rows)[label_set + ['id']]
     return [x for x in _gen_rows([FlagSet(k, v)
                                   for k, v in zip(df.columns.values, [df[df[col]]['id'].values
                                                                       for col in df.columns.values if col != 'id'])])]
