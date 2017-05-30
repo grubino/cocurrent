@@ -1,7 +1,7 @@
 require('react-dropzone-component/styles/filepicker.css');
 require('dropzone/dist/dropzone.css');
 require('react-dropzone-component/dist/react-dropzone.min.js');
-require('../images/logo.png');
+const logoImage = require('../images/logo.png');
 
 import React from 'react';
 import FlagSetTable from './FlagSetTable';
@@ -92,7 +92,7 @@ class AppComponent extends React.Component {
             width: '200px',
             border: '1px solid black'
           }
-        } class="logo" src="/images/logo.png"/>
+        } class="logo" src={logoImage}/>
         <DropzoneComponent
           config={
             {
