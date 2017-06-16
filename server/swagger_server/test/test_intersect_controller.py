@@ -17,7 +17,22 @@ class TestIntersectController(BaseTestCase):
 
         
         """
-        response = self.client.open('/cocurrent/intersect',
+        csv_data = b'''a,b,c,d,e,f
+                Y,N,Y,Y,N,N
+                Y,N,Y,Y,N,N
+                Y,N,Y,Y,Y,Y
+                Y,N,N,Y,N,Y
+                Y,N,N,N,Y,N
+                '''
+
+        data = dict(rows=(BytesIO(csv_data), 'file.txt'))
+        post_response = self.client.open('/cocurrent/intersect',
+                                         method='POST',
+                                         data=data,
+                                         content_type='multipart/form-data')
+        self.assert200(post_response, "Response body is : " + post_response.data.decode('utf-8'))
+
+        response = self.client.open('/cocurrent/intersect?labels=a,b,c,d',
                                     method='GET',
                                     content_type='application/json')
         self.assert200(response, "Response body is : " + response.data.decode('utf-8'))
@@ -28,7 +43,16 @@ class TestIntersectController(BaseTestCase):
 
         
         """
-        data = dict(rows=(BytesIO(b'some file data'), 'file.txt'))
+
+        csv_data = b'''a,b,c,d,e,f
+        Y,N,Y,Y,N,N
+        Y,N,Y,Y,N,N
+        Y,N,Y,Y,Y,Y
+        Y,N,N,Y,N,Y
+        Y,N,N,N,Y,N
+        '''
+
+        data = dict(rows=(BytesIO(csv_data), 'file.txt'))
         response = self.client.open('/cocurrent/intersect',
                                     method='POST',
                                     data=data,
