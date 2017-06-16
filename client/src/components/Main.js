@@ -140,4 +140,7 @@ class AppComponent extends React.Component {
 AppComponent.defaultProps = {
 };
 
+AppComponent.prototype.propTypes = {
+};
+
 export default AppComponent;
