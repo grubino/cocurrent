@@ -48,11 +48,8 @@ const VennComponent = createReactClass({
 
   render() {
 
-    if (!this.props.data.length) return (
-      <div></div>
-    );
-    let data = this.props.data.map(p =>
-    {
+    if (!this.props.data.length) return (<div></div>);
+    let data = this.props.data.map(p => {
       return {
         sets: p.labels,
         size: p.size
@@ -67,7 +64,8 @@ const VennComponent = createReactClass({
     let faux = this.connectFauxDOM('div', 'chart');
     let chart = VennDiagram()
       .width(parseInt(this.state.width))
-      .height(parseInt(this.state.height));
+      .height(parseInt(this.state.height))
+      .fontSize('30px');
     let div = d3.select(faux).datum(data),
       layout = chart(div),
       textCentres = layout.textCentres;
@@ -75,16 +73,21 @@ const VennComponent = createReactClass({
     let genText = function(d) {
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
+    chart(div).nodes.on('mouseover', () => {
+      d3.event.target.style['fill-opacity'] = '1.0';
+    }).on('mouseout', () => {
+      d3.event.target.style['fill-opacity'] = '0.4';
+    });
+    chart.selectAll('.label').style('z-index', '1');
     layout.enter
       .append('text')
       .attr('class', 'sublabel')
       .text(genText)
       .style('fill', '#333')
-      .style('font-size', '10px')
-      .attr('text-anchor', 'middle')
       .attr('dy', '18')
       .attr('x', function(d) { return textCentres[d.sets].x; })
       .attr('y', function(d) { return textCentres[d.sets].y; });
+
     div.call(chart);
 
     let buttonStyle = {
