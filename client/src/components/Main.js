@@ -92,7 +92,7 @@ class AppComponent extends React.Component {
             width: '200px',
             border: '1px solid black'
           }
-        } class="logo" src={logoImage}/>
+        } className="logo" src={logoImage}/>
         <DropzoneComponent
           config={
             {
@@ -138,6 +138,9 @@ class AppComponent extends React.Component {
 }
 
 AppComponent.defaultProps = {
+};
+
+AppComponent.prototype.propTypes = {
 };
 
 export default AppComponent;

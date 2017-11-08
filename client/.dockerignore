@@ -1,2 +1,9 @@
 **
 !nginx/**
+!package.json
+!src/
+!*.js
+!.babelrc
+!cfg/
+!test/
+!.eslintrc
