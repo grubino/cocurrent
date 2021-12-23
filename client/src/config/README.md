@@ -17,7 +17,7 @@ import config from 'config';
 Due to Babel6 we need to append `.default`.
 
 ```js
-let config = require('config').default;
+const config = require('config').default;
 ```
 
 **Example**
@@ -29,7 +29,7 @@ import config from 'config';
 class MyComponent extends React.Component {
   constructor(props, ctx) {
     super(props, ctx);
-    let currentAppEnv = config.appEnv;
+    const currentAppEnv = config.appEnv;
   }
 }
 ```

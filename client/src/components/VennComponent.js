@@ -39,8 +39,8 @@ const VennComponent = createReactClass({
   },
 
   export(canvas) {
-    let url = canvas.toDataURL('image/png');
-    let tempLink = document.createElement('a');
+    const url = canvas.toDataURL('image/png');
+    const tempLink = document.createElement('a');
     tempLink.href = url;
     tempLink.setAttribute('download', 'export.png');
     tempLink.click();
@@ -49,28 +49,28 @@ const VennComponent = createReactClass({
   render() {
 
     if (!this.props.data.length) return (<div></div>);
-    let data = this.props.data.map(p => {
+    const data = this.props.data.map(p => {
       return {
         sets: p.labels,
         size: p.size
       }
     });
-    let totalPopulation = data
+    const totalPopulation = data
       .filter(x => x.sets.length === 1)
       .reduce((acc, x) => acc + x.size, 0);
 
     if (this.connectedFauxDOM['chart']) delete this.connectedFauxDOM['chart'];
 
-    let faux = this.connectFauxDOM('div', 'chart');
-    let chart = VennDiagram()
+    const faux = this.connectFauxDOM('div', 'chart');
+    const chart = VennDiagram()
       .width(parseInt(this.state.width))
       .height(parseInt(this.state.height))
       .fontSize('30px');
-    let div = d3.select(faux).datum(data),
+    const div = d3.select(faux).datum(data),
       layout = chart(div),
       textCentres = layout.textCentres;
 
-    let genText = function(d) {
+    const genText = function(d) {
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
     chart(div).nodes.on('mouseover', () => {
@@ -90,7 +90,7 @@ const VennComponent = createReactClass({
 
     div.call(chart);
 
-    let buttonStyle = {
+    const buttonStyle = {
       backgroundColor: '#F9692C'
     };
     return (
@@ -98,17 +98,17 @@ const VennComponent = createReactClass({
         <button
           onClick={() => {
 
-            let canvas = document.createElement('canvas');
+            const canvas = document.createElement('canvas');
             canvas.width = parseInt(this.state.width);
             canvas.height = parseInt(this.state.height);
 
-            let ctx = canvas.getContext('2d');
-            let svgXML = (new XMLSerializer()).serializeToString(document.getElementsByTagName('svg')[0]);
-            let DOMURL = window.URL || window.webkitURL || window;
+            const ctx = canvas.getContext('2d');
+            const svgXML = (new XMLSerializer()).serializeToString(document.getElementsByTagName('svg')[0]);
+            const DOMURL = window.URL || window.webkitURL || window;
 
-            let image = new Image();
-            let svgBlob = new Blob([svgXML], {type: 'image/svg+xml;charset=utf-8'});
-            let url = DOMURL.createObjectURL(svgBlob);
+            const image = new Image();
+            const svgBlob = new Blob([svgXML], {type: 'image/svg+xml;charset=utf-8'});
+            const url = DOMURL.createObjectURL(svgBlob);
 
             image.onload = () => {
               if (image.complete) {

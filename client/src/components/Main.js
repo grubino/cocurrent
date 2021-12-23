@@ -50,8 +50,8 @@ class AppComponent extends React.Component {
       {
         if (err) this._handleErr(err);
 
-        let singles = res.body.filter(x => x.labels.length === 1);
-        let total = singles.reduce((acc, x) => acc + x.size, 0);
+        const singles = res.body.filter(x => x.labels.length === 1);
+        const total = singles.reduce((acc, x) => acc + x.size, 0);
         this.setState({
           flags: res.body,
           columns: singles.map(x => x.labels[0]),
@@ -75,10 +75,10 @@ class AppComponent extends React.Component {
       });
   }
   render() {
-    let flags = this.state.flags;
-    let vennFlags = this.state.vennFlags;
-    let columns = this.state.columns;
-    let total = this.state.total;
+    const flags = this.state.flags;
+    const vennFlags = this.state.vennFlags;
+    const columns = this.state.columns;
+    const total = this.state.total;
 
     return (
       <div>

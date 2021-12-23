@@ -1,13 +1,13 @@
 
-let path = require('path');
-let defaultSettings = require('./defaults');
+const path = require('path');
+const defaultSettings = require('./defaults');
 
 // Additional npm or bower modules to include in builds
 // Add all foreign plugins you may need into this array
 // @example:
-// let npmBase = path.join(__dirname, '../node_modules');
-// let additionalPaths = [ path.join(npmBase, 'react-bootstrap') ];
-let additionalPaths = [];
+// const npmBase = path.join(__dirname, '../node_modules');
+// const additionalPaths = [ path.join(npmBase, 'react-bootstrap') ];
+const additionalPaths = [];
 
 module.exports = {
   additionalPaths: additionalPaths,
@@ -27,7 +27,7 @@ module.exports = {
     publicPath: defaultSettings.publicPath,
     noInfo: false,
     setup: function(app) {
-      let basicAuth = require('express-basic-auth');
+      const basicAuth = require('express-basic-auth');
       app.use(basicAuth({
         users: {
           'walter.kawecki@voterlabs.com': 'banana',

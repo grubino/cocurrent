@@ -10,35 +10,35 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 class FlagSetTable extends React.Component {
   export(cols, rows) {
-    let allCols = ['id'].concat(cols);
-    let firstRow = allCols.join(',');
-    let csvRows = rows.map(row => allCols.reduce((acc, x) => acc.concat(row[x]), []).join(',')).join('\n');
-    let text = [firstRow, csvRows].join('\n');
-    let blob = new Blob([text], {type: 'text/csv;charset=utf-8'});
-    let url = window.URL.createObjectURL(blob);
-    let tempLink = document.createElement('a');
+    const allCols = ['id'].concat(cols);
+    const firstRow = allCols.join(',');
+    const csvRows = rows.map(row => allCols.reduce((acc, x) => acc.concat(row[x]), []).join(',')).join('\n');
+    const text = [firstRow, csvRows].join('\n');
+    const blob = new Blob([text], {type: 'text/csv;charset=utf-8'});
+    const url = window.URL.createObjectURL(blob);
+    const tempLink = document.createElement('a');
     tempLink.href = url;
     tempLink.setAttribute('download', 'export.csv');
     tempLink.click();
   }
   render() {
-    let total = this.props.total;
-    let cols = this.props.columns;
-    let data = this.props.data;
-    let singles = data.filter(p => p.labels.length === 1);
-    let intersects = data.filter(p => p.labels.length === 2);
-    let rows = this.props.columns.map(label => {
-      let r = {id: label};
+    const total = this.props.total;
+    const cols = this.props.columns;
+    const data = this.props.data;
+    const singles = data.filter(p => p.labels.length === 1);
+    const intersects = data.filter(p => p.labels.length === 2);
+    const rows = this.props.columns.map(label => {
+      const r = {id: label};
       r[label] = (100 * singles.filter(p => p.labels[0] === label)[0].size / total).toFixed(2);
       cols.filter(c => c !== label).forEach(col => {
-        let labelColIntersect = intersects.filter(d => (
+        const labelColIntersect = intersects.filter(d => (
           d.labels.indexOf(label) !== -1 && d.labels.indexOf(col) !== -1));
         r[col] = (100 * labelColIntersect[0].size / total).toFixed(2);
       });
       return r;
     });
     if (rows.length > 0) {
-      let buttonStyle = {
+      const buttonStyle = {
         backgroundColor: '#F9692C'
       };
       return (
