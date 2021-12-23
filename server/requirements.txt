@@ -4,3 +4,4 @@ setuptools>=21.0.0
 flask_cors
 pandas
 numpy
+Werkzeug==0.16.1
