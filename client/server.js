@@ -10,7 +10,7 @@ const open = require('open');
  * Flag indicating whether webpack compiled for the first time.
  * @type {boolean}
  */
-const isInitialCompilation = true;
+let isInitialCompilation = true;
 
 const compiler = webpack(config);
 
