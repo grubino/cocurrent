@@ -4,7 +4,7 @@ import baseConfig from './base';
 
 const config = {
   appEnv: 'dev',  // feel free to remove the appEnv property here,
-  apiHost: 'localhost',
+  apiHost: '207.246.81.133',
   apiPort: 8080
 };
 
