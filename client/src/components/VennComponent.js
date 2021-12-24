@@ -78,7 +78,7 @@ const VennComponent = createReactClass({
     }).on('mouseout', () => {
       d3.event.target.style['fill-opacity'] = '0.4';
     });
-    chart.selectAll('.label').style('z-index', '1');
+    //chart(div).selectAll('.label').style('z-index', '1');
     layout.enter
       .append('text')
       .attr('class', 'sublabel')
