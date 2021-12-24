@@ -73,10 +73,14 @@ const VennComponent = createReactClass({
     const genText = function(d) {
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
+    d3.selectAll('#mono .venn-circle path')
+      .style('fill-opacity', 0)
+      .style('stroke-width', 2)
+      .style('stroke', '#444');
     chart(div).nodes.on('mouseover', () => {
-      d3.event.target.style['fill-opacity'] = '1.0';
+      d3.event.target.style['fill-opacity'] = 1;
     }).on('mouseout', () => {
-      d3.event.target.style['fill-opacity'] = '0.4';
+      d3.event.target.style['fill-opacity'] = 0;
     });
     //chart(div).selectAll('.label').style('z-index', '1');
     layout.enter
