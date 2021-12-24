@@ -76,7 +76,8 @@ const VennComponent = createReactClass({
     d3.select(faux)
       .style('fill-opacity', 0)
       .style('stroke-width', 2)
-      .style('stroke', '#444');
+      .style('stroke', '#444')
+      .style('fill', '#aaa');
     chart(div).nodes.on('mouseover', () => {
       d3.event.target.style['fill-opacity'] = 1;
     }).on('mouseout', () => {
