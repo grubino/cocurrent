@@ -73,7 +73,7 @@ const VennComponent = createReactClass({
     const genText = function(d) {
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
-    d3.selectAll('.venn-circle path')
+    chart(div)
       .style('fill-opacity', 0)
       .style('stroke-width', 2)
       .style('stroke', '#444');
