@@ -71,6 +71,7 @@ const VennComponent = createReactClass({
       textCentres = layout.textCentres;
 
     const genText = function(d) {
+      if (d.size === 0) return '';
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
     d3.select(faux)
