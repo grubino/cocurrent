@@ -61,6 +61,15 @@ class AppComponent extends React.Component {
       });
   }
   onRowSelect(rowKeys) {
+    if(rowKeys.length === 0) {
+      this.notificationSystem.addNotification({
+        title: 'Error',
+        level: 'error',
+        position: 'tc',
+        message: 'You must select at least one row'
+      });
+      return;
+    }
     this.setState({downloading: true});
     request
       .get(`http://${config.apiHost}:${config.apiPort}/cocurrent/intersect?labels=${rowKeys.join(',')}`)
