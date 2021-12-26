@@ -74,7 +74,7 @@ const VennComponent = createReactClass({
       if (d.size === 0) return '';
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
-    d3.select(faux)
+    layout.nodes
       .style('fill-opacity', 0)
       .style('stroke-width', 2)
       .style('stroke', '#444')
