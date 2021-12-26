@@ -74,16 +74,6 @@ const VennComponent = createReactClass({
       if (d.size === 0) return '';
       return `${(100 * (d.size / totalPopulation)).toFixed(2)}`;
     };
-    layout.nodes
-      .style('fill-opacity', 0)
-      .style('stroke-width', 2)
-      .style('stroke', '#444')
-      .style('fill', '#aaa');
-    chart(div).nodes.on('mouseover', () => {
-      d3.event.target.style['fill-opacity'] = 1;
-    }).on('mouseout', () => {
-      d3.event.target.style['fill-opacity'] = 0;
-    });
     //chart(div).selectAll('.label').style('z-index', '1');
     layout.enter
       .append('text')
